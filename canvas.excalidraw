@@ -25,7 +25,6 @@
         "type": 3
       },
       "seed": 1614957980,
-      "version": 122,
       "versionNonce": 1185412900,
       "isDeleted": false,
       "boundElements": null,
@@ -55,12 +54,41 @@
         "type": 3
       },
       "seed": 243113116,
-      "version": 218,
       "versionNonce": 143047076,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1789828322124,
       "link": "https://github.com/algomystic/TheParallaxView",
+      "locked": false
+    },
+    {
+      "id": "zl0Jq14zJXkFrgs1fBDZX",
+      "type": "embeddable",
+      "x": 1966.572981604519,
+      "y": 95.29783403370072,
+      "width": 560,
+      "height": 840,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a2",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1763632184,
+      "version": 58,
+      "versionNonce": 2135325256,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1789828964144,
+      "link": "https://github.com/RTUITLab/TheParallaxView",
       "locked": false
     }
   ],
