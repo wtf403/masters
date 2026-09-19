@@ -2,10 +2,37 @@
   "type": "excalidraw",
   "version": 2,
   "source": "excalidrop",
-  "elements": [],
-  "appState": {
-    "viewBackgroundColor": "#ffffff",
-    "gridSize": null
-  },
+  "elements": [
+    {
+      "id": "nVN-YLeK1m0j0xMPtNMEs",
+      "type": "embeddable",
+      "x": 200.06640625,
+      "y": 48.24609375,
+      "width": 560,
+      "height": 840,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a0",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1614957980,
+      "version": 43,
+      "versionNonce": 1211546916,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1789828099376,
+      "link": "https://jgl.github.io/TheParallaxView/",
+      "locked": false
+    }
+  ],
   "files": {}
 }
