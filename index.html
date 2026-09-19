@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Excalidrop Canvas</title>
+    <link rel="icon" type="image/png" href="./assets/drop-BFhuMYSw.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .pill button,
+        .login-panel button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-connected {
+            background-color: #28a745;
+        }
+        
+        .status-disconnected {
+            background-color: #dc3545;
+        }
+        
+        .app {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            /* Canvas handles its own camera zoom; kill the browser page-zoom
+               gesture so ctrl/pinch-wheel never scales the document. */
+            touch-action: none;
+            overscroll-behavior: none;
+        }
+
+        .pill {
+            position: fixed;
+            right: 64px;
+            bottom: 16px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ececf4;
+            border: none;
+            border-radius: 0.5em;
+            padding: 0 12px;
+            font-size: 12px;
+            color: #555;
+            z-index: 100;
+            box-shadow: none;
+        }
+
+        /* Save/status block when docked in Excalidraw's own <Footer/>
+           (bottom-left bar): static flow instead of the floating overlay.
+           footer-center is a zero-gap flex row, so the pill needs its own
+           left margin to sit clear of the undo/redo island. */
+        .excalidraw .pill {
+            position: static;
+            z-index: auto;
+            margin-left: 0.5rem;
+        }
+
+        /* Save button portaled into Excalidraw's mobile side island
+           (.mobile-misc-tools-container): matches the 2rem ToolIcon
+           squares stacked there. Unsaved changes tint only the icon
+           stroke yellow — never the button background. */
+        .excalidraw .mobile-save-btn {
+            width: var(--default-button-size);
+            height: var(--default-button-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--icon-fill-color);
+            border: none;
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .excalidraw .mobile-save-btn:hover {
+            background: var(--button-hover-bg);
+        }
+
+        .excalidraw .mobile-save-btn.dirty {
+            background: transparent;
+            color: #ffd60a;
+        }
+
+        .excalidraw .mobile-save-btn.dirty:hover {
+            background: transparent;
+        }
+
+        .excalidraw .mobile-save-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: none;
+            fill: none;
+            stroke: currentColor;
+        }
+
+        /* Flat look for Excalidraw chrome around the pill. */
+        .excalidraw button,
+        .excalidraw .App-menu_top__left,
+        .excalidraw .App-menu__left {
+            box-shadow: none !important;
+        }
+
+        /* Icon-only save button docked inside the pill.
+           Specificity beats `.pill button` so the icon button keeps
+           zero padding and a pinned 16px glyph. */
+        .pill .save-icon-btn {
+            padding: 0;
+        }
+
+        .save-icon-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: none;
+            fill: none;
+            stroke: currentColor;
+        }
+        .save-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 0.5em;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .save-icon-btn:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .save-icon-btn:active {
+            background: rgba(0,0,0,0.14);
+        }
+
+        /* Text link in the status pill: shown when the token is valid but
+           the GitHub App isn't installed on this repo (denied + install hint). */
+        .pill .install-link {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1971c2;
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 0.5em;
+            white-space: nowrap;
+        }
+
+        .pill .install-link:hover {
+            background: rgba(25,113,194,0.12);
+            text-decoration: underline;
+        }
+
+        .save-icon-btn.pull-available {
+            background: #ffd60a;
+            animation: pull-pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pull-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,214,10,0.6); }
+            50% { box-shadow: 0 0 0 6px rgba(255,214,10,0); }
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            max-width: min(520px, 90vw);
+            background: #1e1e1e;
+            color: #fff;
+            font-size: 12px;
+            padding: 8px 14px;
+            border-radius: 0.5em;
+            z-index: 100;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .login-panel {
+            position: fixed;
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #1e1e1e;
+            font-size: 13px;
+            padding: 16px 20px;
+            border-radius: 0.75em;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            z-index: 100;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 260px;
+        }
+
+        .login-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .login-hint {
+            color: #555;
+            font-size: 12px;
+        }
+
+        .login-input {
+            width: 100%;
+            box-sizing: border-box;
+            font-family: ui-monospace, monospace;
+            font-size: 12px;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 0.5em;
+        }
+
+        .login-row {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .login-save {
+            background: #1e1e1e;
+            color: #fff;
+            border-radius: 0.5em;
+        }
+
+        .login-save:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .login-error {
+            color: #c82333;
+            font-size: 12px;
+        }
+
+        .login-cancel {
+            background: #ececf4;
+            color: #1e1e1e;
+            border-radius: 0.5em;
+        }
+
+        .login-cancel:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+
+
+    </style>
+  <script type="module" crossorigin src="./assets/index-Dtc2YcdT.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BRA5OktX.css">
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
