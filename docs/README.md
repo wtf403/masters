@@ -1,3 +1,7 @@
+https://online.mospolytech.ru/course/view.php?id=16756
+
+latex: https://github.com/pavelkryukov/miptlatex
+
 Список возможных руководителей ВКР
 
 Арсентьев Дмитрий Андреевич, к.т.н., доцент каф. ИиИТ 
