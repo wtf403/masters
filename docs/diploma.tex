@@ -1,0 +1,1476 @@
+% File: diploma.tex
+
+\documentclass[
+    14pt,
+    specialist,
+    candidate, % document type
+    subf, % use and configure subfig package for nested figure numbering
+    href,
+    dotsinheaders=false
+]{disser}
+
+\hypersetup{colorlinks=false} % Configure hyperref loaded by disser class
+
+% Кодировка и язык
+\usepackage[T2A]{fontenc} % поддержка кириллицы
+\usepackage[utf8]{inputenc} % кодировка исходного текста
+\usepackage[english,russian]{babel} % переключение языков
+
+% Геометрия страницы и графика
+\usepackage[a4paper, mag=1000, left=3cm, right=1.5cm, top=2cm, bottom=2cm, headsep=0.7cm, footskip=1cm]{geometry}
+\usepackage{graphicx} % подключение графики
+\usepackage{pdfpages} % вставка pdf-страниц
+
+% Таблицы
+\usepackage{array} % расширенные возможности для работы с таблицами
+\usepackage{tabularx} % автоматический подбор ширины столбцов
+\usepackage{dcolumn} % выравнивание чисел по разделителю
+
+% Математика
+\usepackage{bm} % полужирное начертание для математических символов
+\usepackage{amsmath} % дополнительные математические возможности
+\usepackage{amssymb} % дополнительные математические символы
+\usepackage{times}
+
+% Библиография и ссылки
+\usepackage{cite} % поддержка цитирования
+% \usepackage[colorlinks=false]{hyperref} % Removed - loaded by 'href' class option
+% \urlstyle{same}
+% \renewcommand{\UrlFont}{\rmdefault}
+
+% Прочее
+\usepackage{color} % работа с цветом
+\usepackage{epstopdf} % конвертация eps в pdf
+\usepackage{multirow} % объединение ячеек таблиц по вертикали
+\usepackage{afterpage} % вставка материала после текущей страницы
+\usepackage{indentfirst} % отступ в первом абзаце раздела
+\usepackage[font={normal}]{caption} % настройка подписей к рисункам и таблицам
+\usepackage[onehalfspacing]{setspace} % полуторный интервал
+\usepackage{fancyhdr} % установка колонтитулов
+\usepackage{paratype} % моноширинный кириллический шрифт
+\usepackage{listings} % поддержка вставки исходного кода
+\usepackage{longtable} % для длинных таблиц
+\usepackage{needspace} % для контроля разрывов страниц
+\usepackage[framemethod=tikz]{mdframed} % для рамок с поддержкой разбиения по страницам
+\usepackage{tikz} % для графики и узлов в mdframed
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor} % расширенная поддержка цветов
+% \usepackage{newtxtext}
+% \usepackage{newtxmath}
+\usepackage{enumitem} % для настройки списков
+\usepackage[section]{placeins} % предотвращает перемещение флоатов за пределы текущей секции
+\usepackage{float}
+
+% Определяем цвет mauve для подсветки строк в листингах
+\definecolor{mauve}{RGB}{136,0,136}
+
+% % Установка шрифта Times New Roman
+\renewcommand{\rmdefault}{ftm}
+
+% Установка абзацного отступа 1.25 см
+\setlength{\parindent}{1.25cm}
+
+% Убрать дополнительный интервал между абзацами одного стиля
+\setlength{\parskip}{0pt}
+
+% Настройка списков
+\setlist{nosep} % убираем дополнительные отступы в списках
+\setlist[itemize,1]{label={\textbullet}} % первый уровень маркированного списка
+\setlist[itemize,2]{label={\textendash}} % второй уровень маркированного списка
+\setlist[enumerate,2]{label={\alph{)}.}} % второй уровень нумерованного списка
+\setlist[enumerate,1]{label={\arabic*.}, align=left, labelindent=\parindent, leftmargin=*, labelsep=0.25em, itemindent=0pt}
+
+% Настройка стиля страницы
+\pagestyle{fancy}      % Использование стиля "fancy" для оформления страниц
+\fancyhf{}              % Очистка текущих значений колонтитулов
+\fancyfoot[C]{\thepage} % Установка номера страницы в нижнем колонтитуле по центру
+\renewcommand{\headrulewidth}{0pt} % Удаление разделительной линии в верхнем колонтитуле
+
+% Переопределяем стиль plain для использования в оглавлении и других специальных страницах
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% Обеспечим чтобы оглавление имело номер страницы внизу, а не вверху
+\AtBeginDocument{
+  \let\oldtableofcontents\tableofcontents
+  \renewcommand{\tableofcontents}{
+    \begingroup
+    \pagestyle{plain}
+    \oldtableofcontents
+    \endgroup
+  }
+}
+
+% Настройка подписей к таблицам и рисункам
+\captionsetup[table]{position=above, justification=raggedright, singlelinecheck=false, format=plain, labelformat=simple, labelsep=endash}
+\captionsetup[figure]{position=below, justification=centering, singlelinecheck=true, format=plain, labelformat=simple, labelsep=endash}
+
+% Добавляем пакет для управления метками в листингах
+\usepackage{extramarks}
+
+% Настройка шрифта в таблицах
+\let\oldtabular\tabular
+\let\endoldtabular\endtabular
+\renewenvironment{tabular}{\small\oldtabular}{\endoldtabular}
+
+\makeatletter
+
+% Define tab command for consistent spacing
+\newcommand\tab[1][1.25cm]{\hspace*{#1}}
+
+% Fix TOC to include dots between titles and page numbers
+\renewcommand\@dotsep{4.5}
+\renewcommand\tocpostthepart{\@postskip}
+\renewcommand\tocpostthechapter{\@postskip}
+\renewcommand\tocpostthesection{\@postskip}
+\renewcommand\tocpostthesubsection{\@postskip}
+\renewcommand\tocpostthesubsubsection{\@postskip}
+\renewcommand\tocposttheparagraph{\@postskip}
+\renewcommand\tocpostthesubparagraph{\@postskip}
+% \renewcommand{\UrlFont}{\normalfont}
+
+% Redefine TOC entry commands to use 14pt font and include dots
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    % \vskip 1.0em \@plus\p@
+    \setlength\@tempdima{2em}%
+    \begingroup
+    \parindent \z@ \rightskip \@pnumwidth
+    \parfillskip -\@pnumwidth
+    % \leavevmode \normalsize\bfseries\fontsize{14}{16}\selectfont
+    \hskip -\leftskip
+    #1\nobreak\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \penalty\@highpenalty
+    \endgroup
+  \fi}
+
+\renewcommand*\l@section[2]{%
+  \ifnum \c@tocdepth >\z@
+    % \vskip 1em \@plus\p@
+    \setlength\@tempdima{2em}%
+    \begingroup
+    \parindent \z@ \rightskip \@pnumwidth
+    \parfillskip -\@pnumwidth
+    % \leavevmode \normalsize\fontsize{14}{16}\selectfont
+    \hskip -\leftskip
+    #1\nobreak\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \penalty\@highpenalty
+    \endgroup
+  \fi}
+
+\renewcommand*\l@subsection[2]{%
+  \ifnum \c@tocdepth >\@ne
+    % \vskip 1em \@plus\p@
+    \setlength\@tempdima{3em}%
+    \begingroup
+    \parindent \z@ \rightskip \@pnumwidth
+    \parfillskip -\@pnumwidth
+    \leavevmode \normalsize\fontsize{14}{16}\selectfont
+    \hskip -\leftskip
+    #1\nobreak\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \penalty\@highpenalty
+    \endgroup
+  \fi}
+
+% Add a flag to track if we're immediately after a chapter
+\newif\if@afterchapter
+\@afterchapterfalse
+
+% Make chapter titles bold and centered with proper anchoring - ALL CAPS for first level
+\newcommand{\mychapter}[1]{%
+  \newpage
+  \refstepcounter{chapter}% Move counter increment inside the command
+  \hypertarget{chap:\thechapter}{}% Create unique anchor
+  \begin{center}
+    \textbf{\MakeUppercase{\thechapter\space #1}}
+  \end{center}
+  % Reduce space between number and title in TOC by using less space or negative space
+  \addcontentsline{toc}{chapter}{\texorpdfstring{\thechapter\hspace{0.3em}#1}{Chapter \thechapter}}% Reduced space
+  \@afterchaptertrue % Set flag after chapter
+}
+
+% Special command for unnumbered chapters (like INTRODUCTION, CONCLUSION)
+\newcommand{\myunnumberedchapter}[1]{%
+  \newpage
+  \hypertarget{chap:#1}{}% Create unique anchor
+  \begin{center}
+    \textbf{\MakeUppercase{#1}}
+  \end{center}
+  \addcontentsline{toc}{chapter}{\texorpdfstring{#1}{#1}}% Add optional PDF string
+}
+
+\newcommand{\mysection}[1]{%
+  \ifnum\value{section}>0
+  \vspace{1em}
+  \fi
+  \refstepcounter{section}
+  \hypertarget{sec:\thechapter.\thesection}{}% Create unique anchor
+  \textbf{\thesection\space #1}
+  % Reduce space between number and title in TOC
+  \addcontentsline{toc}{section}{\texorpdfstring{\thesection\hspace{2em}#1}{Section \thesection}}% Reduced space
+}
+
+\newcommand{\mysubsection}[1]{%
+  \refstepcounter{subsection}
+  \hypertarget{subsec:\thechapter.\thesection.\thesubsection}{}
+  \textbf{\thesubsection\space #1}
+  % Reduce space between number and title in TOC
+  \addcontentsline{toc}{subsection}{\texorpdfstring{\thesubsection\hspace{2em}#1}{Subsection \thesubsection}}
+}
+
+\renewcommand{\thechapter}{\arabic{chapter}}
+
+% Define appendix format with Cyrillic letters
+\newcommand{\startappendix}{%
+  \setcounter{chapter}{0}%
+  \renewcommand{\thechapter}{\CYRA\cyrillictext}%
+  \renewcommand{\thesection}{\thechapter.\arabic{section}}%
+  \renewcommand{\thesubsection}{\thechapter.\arabic{section}.\arabic{subsection}}%
+  \renewcommand{\thetable}{\thechapter.\arabic{table}}%
+  \renewcommand{\thefigure}{\thechapter.\arabic{figure}}%
+}
+
+\makeatother
+
+\AtBeginDocument{\onehalfspacing}
+
+% Настройка листингов кода (перед \begin{document})
+\lstset{
+    language=Python,
+    inputencoding=utf8,
+    frame=single,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\slshape\color{green!50!black},
+    stringstyle=\color{mauve},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    extendedchars=true,
+    literate={а}{{\cyra}}1
+             {б}{{\cyrb}}1
+             {в}{{\cyrv}}1
+             {г}{{\cyrg}}1
+             {д}{{\cyrd}}1
+             {е}{{\cyre}}1
+             {ё}{{\cyryo}}1
+             {ж}{{\cyrzh}}1
+             {з}{{\cyrz}}1
+             {и}{{\cyri}}1
+             {й}{{\cyrishrt}}1
+             {к}{{\cyrk}}1
+             {л}{{\cyrl}}1
+             {м}{{\cyrm}}1
+             {н}{{\cyrn}}1
+             {о}{{\cyro}}1
+             {п}{{\cyrp}}1
+             {р}{{\cyrr}}1
+             {с}{{\cyrs}}1
+             {т}{{\cyrt}}1
+             {у}{{\cyru}}1
+             {ф}{{\cyrf}}1
+             {х}{{\cyrh}}1
+             {ц}{{\cyrc}}1
+             {ч}{{\cyrch}}1
+             {ш}{{\cyrsh}}1
+             {щ}{{\cyrshch}}1
+             {ъ}{{\cyrhrdsn}}1
+             {ы}{{\cyrery}}1
+             {ь}{{\cyrsftsn}}1
+             {э}{{\cyrerev}}1
+             {ю}{{\cyryu}}1
+             {я}{{\cyrya}}1
+             {А}{{\CYRA}}1
+             {Б}{{\CYRB}}1
+             {В}{{\CYRV}}1
+             {Г}{{\CYRG}}1
+             {Д}{{\CYRD}}1
+             {Е}{{\CYRE}}1
+             {Ё}{{\CYRYO}}1
+             {Ж}{{\CYRZH}}1
+             {З}{{\CYRZ}}1
+             {И}{{\CYRI}}1
+             {Й}{{\CYRISHRT}}1
+             {К}{{\CYRK}}1
+             {Л}{{\CYRL}}1
+             {М}{{\CYRM}}1
+             {Н}{{\CYRN}}1
+             {О}{{\CYRO}}1
+             {П}{{\CYRP}}1
+             {Р}{{\CYRR}}1
+             {С}{{\CYRS}}1
+             {Т}{{\CYRT}}1
+             {У}{{\CYRU}}1
+             {Ф}{{\CYRF}}1
+             {Х}{{\CYRH}}1
+             {Ц}{{\CYRC}}1
+             {Ч}{{\CYRCH}}1
+             {Ш}{{\CYRSH}}1
+             {Щ}{{\CYRSHCH}}1
+             {Ъ}{{\CYRHRDSN}}1
+             {Ы}{{\CYRERY}}1
+             {Ь}{{\CYRSFTSN}}1
+             {Э}{{\CYREREV}}1
+             {Ю}{{\CYRYU}}1
+             {Я}{{\CYRYA}}1,
+    caption=\relax,
+    captionpos=t,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    framerule=0.5pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    escapeinside={(*@}{@*)},
+    morekeywords={import, from, as, def, class, return, if, else, elif, for, while, try, except, finally, with, lambda, True, False, None},
+    float=h!,
+    abovecaptionskip=5pt,
+    belowcaptionskip=5pt,
+    xleftmargin=15pt,
+    xrightmargin=15pt,
+    framexleftmargin=15pt,
+    framexrightmargin=15pt,
+    firstnumber=1,
+    escapechar=@
+}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{Solidity}{
+  keywords=[1]{pragma, contract, interface, library, is, function, event, modifier, constructor, returns, struct, enum, mapping, address, uint, bool, string, memory, storage, calldata, payable, view, pure, external, internal, public, private, import, using, emit},
+  keywords=[2]{require, revert, assert, selfdestruct, delete, new},
+  keywordstyle=[1]\color{blue}\bfseries,
+  keywordstyle=[2]\color{red}\bfseries,
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+% Переопределение названий для листингов
+\renewcommand{\lstlistingname}{Листинг}
+
+% Настройка подписей к листингам через caption
+\captionsetup[lstlisting]{
+    singlelinecheck=false,
+    justification=raggedright,
+    format=plain,
+    labelformat=simple,
+    labelsep=endash
+}
+
+% Упрощенная команда для вставки надписи "Продолжение листинга"
+\newcommand{\continuedlisting}[1]{%
+  \begin{center}
+    \textbf{\lstlistingname~#1~--- Продолжение}
+  \end{center}
+}
+
+% Настройка подписей к таблицам и рисункам
+\captionsetup[table]{position=above, justification=raggedright, singlelinecheck=false, format=plain, labelformat=simple, labelsep=endash}
+\captionsetup[figure]{position=below, justification=centering, singlelinecheck=true, format=plain, labelformat=simple, labelsep=endash}
+
+% Обновим настройки для фигур и таблиц, чтобы они не перепрыгивали на другую страницу
+\makeatletter
+\renewcommand{\fps@figure}{h!}
+\renewcommand{\fps@table}{h!}
+\makeatother
+
+% Простое определение для вставки блокировщика плавающих элементов
+\newcommand{\preventfloating}{\FloatBarrier}
+
+\begin{document}
+
+\sloppy
+
+\includepdf[pages={1}]{./assets/TitlePage.pdf}
+
+\thispagestyle{fancy}
+\renewcommand{\contentsname}{\centerline{\normalsize\bfseries\centerline{\textbf{\MakeUppercase{СОДЕРЖАНИЕ}}}}}
+\setcounter{tocdepth}{1}
+
+\begingroup
+\pagestyle{fancy}
+\tableofcontents
+\endgroup
+
+\myunnumberedchapter{ВВЕДЕНИЕ}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Проанализировать предметную область и целевую аудиторию.
+  \item Проанализировать существующие на рынке аналоги и конкурентов.
+  \item Выявить ограничения текущих решений для оценки инвестиций.
+  \item Составить требования к целевому решению для инвестиционной оценки.
+  \item Спроектировать целевое решение и сценарии пользовательского взаимодействия
+  \item Разработать блокчейн-систему инвестиционной оценки
+  \item Оптимизировать инвестиционное распределение через масштабирование модели обучения с подкреплением.
+  \item Смоделировать инвестиционную оценку на основе рыночных данных.
+  \item Описать программные и технические средства разработки и спроектировать структуру базы данных.
+  \item Спроектировать архитектуру и описать схему развертывания децентрализованного приложения.
+  \item Разработать серверную и клиентскую части децентрализованного приложения.
+  \item Провести тестирование и обеспечить безопасность работы децентрализованного приложения.
+\end{enumerate}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ###################################################
+% # Глава 1
+\mychapter{АНАЛИТИЧЕСКИЙ ОБЗОР}
+% ###################################################
+
+% TODO: текст раздела
+
+% ### 1.1
+\mysection{Анализ предметной области}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% https://www.ey.com/en_us/insights/growth/venture-capital-investment-trends
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./assets/1.1-value-of-investments.png}
+  \caption{Объем инвестиций уменьшается}
+  \label{fig:1.1-value-of-investments}
+\end{figure}
+
+% https://sccei.fsi.stanford.edu/china-briefs/following-different-leader-global-influence-chinas-venture-capital-backed-businesses
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./assets/1.1-value-of-investments.png}
+  \caption{}
+  \label{fig:1.1-value-of-investments}
+\end{figure}
+
+% TODO: текст раздела
+
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./assets/vc-gdp-share.png}
+  \caption{Доля венчурного капитала в структуре ВВП развитых стран}
+  \label{fig:vc-gdp-share}
+\end{figure}
+
+% TODO: текст раздела
+
+% ### 1.2
+\mysection{Анализ целевой аудитории}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ### 1.3
+\mysection{Анализ аналогов и конкурентов}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/crowd-funding.png}
+  \caption{Рост числа инвестиций}
+  \label{fig:crowd-funding}
+\end{figure}
+
+% TODO: текст раздела
+
+% ### 1.4
+\mysection{Ограничения текущих решений для оценки инвестиций}
+
+\mysubsection{IDEF0 AS-IS}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/idef0-A0.png}
+  \caption{Механизм распределения ресурсов в нотации IDEF0 A0}
+  \label{fig:idef0-A0}
+\end{figure}
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Входы (Input) -- данные, частные знания или сигналы окружения необходимые для выполнения функции.
+  \item Управление (Control) -- правила, политики или условия, управляющие функцией.
+  \item Выходы (Output) -- результаты выполнения функции.
+  \item Механизмы (Mechanism) -- стимулы для добровольного участия и согласования локальных решений в единую глобальную норму.
+\end{enumerate}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/idef0.png}
+  \caption{Механизм распределения ресурсов в нотации IDEF0}
+  \label{fig:idef0}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ### 1.5
+\mysection{Требования к целевому процессу инвестиционной оценки}
+
+\mysubsection{IDEF0 AS-IS}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/idef0-A0.png}
+  \caption{Механизм распределения ресурсов в нотации IDEF0 A0}
+  \label{fig:idef0-A0}
+\end{figure}
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Входы (Input) -- данные, частные знания или сигналы окружения необходимые для выполнения функции.
+  \item Управление (Control) -- правила, политики или условия, управляющие функцией.
+  \item Выходы (Output) -- результаты выполнения функции.
+  \item Механизмы (Mechanism) -- стимулы для добровольного участия и согласования локальных решений в единую глобальную норму.
+\end{enumerate}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/idef0.png}
+  \caption{Механизм распределения ресурсов в нотации IDEF0}
+  \label{fig:idef0}
+\end{figure}
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Система должна предоставлять пользователю способ отправлять идею и делать её доступной для коллективной оценки.
+  \item Пользователи должны иметь возможность выражать интерес к идее, влияя на её развитие и видимость.
+  \item Идеи должны получать рыночную оценку.
+  \item Администратор должен иметь возможность валидировать контент до его публикации на платформе.
+  \item Система должна адаптироваться к изменению поведения участников для поддержания честности и эффективности.
+\end{enumerate}
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Совместимость: поддержка iOS, Android, Web и Telegram Mini Apps.
+  \item Производительность: время отклика системы не должно превышать 30 секунд.
+  \item Прозрачность: все финансовые операции и решения фиксируются в смарт-контрактах на публичном блокчейне.
+  \item Модульность: архитектура должна быть компонентной с возможностью обновления, замены и масштабирования отдельных частей.
+\end{enumerate}
+
+% ### 1.6
+\mysection{Вывод по первой главе}
+
+% TODO: текст раздела
+
+% ###################################################
+% # Глава 2
+\mychapter{ТЕХНОЛОГИЯ ИНВЕСТИЦИОННОЙ ОЦЕНКИ}
+% ###################################################
+
+% TODO: текст раздела
+
+% ### 2.1
+\mysection{Проектирование целевого решения}
+
+% #### 2.1.1
+\mysubsection{Классические венчурные инвестиции}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./assets/investments.png}
+  \caption{Схема оценки в классических венчурных инвестициях}
+  \label{fig:investments}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item Агент
+  \item Среда
+  \item Механизм
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%
+
+% TODO: текст раздела
+
+\mysubsection{Адаптация механизма}
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ### 2.2
+\mysection{Разработка сценариев пользовательского взаимодействия}
+
+% #### Рациональная стратегия
+
+% TODO: текст раздела
+
+% TODO: общее экономическое равновесие supply/demand
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/nash-equilibrium.png}
+  \caption{Равновесие Нэша}
+  \label{fig:nash-equilibrium}
+\end{figure}
+
+% TODO: текст раздела
+
+% #### Вычислительная мощьность
+% Цена отражает знания о товаре и ожидание о полученном
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/condorcent.png}
+  \caption{Вероятность для нескольких групп P преуспеть}
+  \label{fig:condorcet}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ## 2.3.2
+\mysubsection{Proof of Stake (PoS)}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/nash-equilibrium.png}
+  \caption{Равновесие Нэша}
+  \label{fig:nash-equilibrium}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\mysubsection{Устойчивость системы}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/longest-chain.png}
+  \caption{Индивидуальному пользователю не выгодно пытаться обмануть систему, поскольку она всегда следует наиболее «длинной» (то есть экономически выгодной и честной) цепочке действий.}
+  \label{fig:longest-chain}
+\end{figure}
+
+% TODO: текст раздела
+
+
+% ### 2.4
+\mysection{Разработка блокчейн-системы инвестиционной оценки}
+
+% #### 2.4.1
+\mysubsection{Экономические принципы}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/one-price.png}
+  \caption{Сходимость ценовых ожиданий участников рынка}
+  \label{fig:one-price}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/limit-order.png}
+  \caption{График глубины рынка для торговых пар с высокой и низкой ликвидностью}
+  \label{fig:limit-order}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/polymarket-elections.png}
+  \caption{Прогноз президентских выборов в США в 2024 году}
+  \label{fig:polymarket-elections}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./assets/bpmn-new.png}
+  \caption{Формальная схема процесса распределения ресурсов}
+  \label{fig:bpmn-new}
+\end{figure}
+
+% TODO: текст раздела
+
+% #### 2.4.2
+\mysubsection{Augmented Bonding Curve (ABC)}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+%
+% TODO: текст раздела
+%
+% TODO: текст раздела
+
+% TODO: текст раздела
+\begin{lstlisting}[language=Solidity, caption={Пример реализации ERC-20 с ABC}, label={lst:abc}]
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+\end{lstlisting}
+
+% 2.4.3
+\mysubsection{Блокировака активов}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+\begin{enumerate}
+  \item При покупке токена по текущей цене $P(s)$ создаётся запись о цене приобретения $P_{\text{buy}}$.
+  \item Полученные токены блокируются и не подлежат выводу до выполнения одного из двух условий:
+        \begin{itemize}
+          \item Рыночная цена $P_{\text{now}} \geq P_{\text{buy}}$;
+          \item Истечение установленного времени $L$.
+        \end{itemize}
+  \item Таким образом, вывод токенов становится возможным только при подтверждённой устойчивости их оценки либо по завершении установленного локапа.
+\end{enumerate}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{lstlisting}[language=Solidity, caption={Пример реализации смарт контракта для блокирования активов}, label={lst:locker}]
+% TODO: текст раздела
+
+% TODO: текст раздела
+\end{lstlisting}
+
+% #### Quadratic Funding (QF)
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{lstlisting}[language=Solidity, caption={Пример реализации смарт контракта для механизма QF}, label={lst:qf}]
+% TODO: текст раздела
+
+% TODO: текст раздела
+\end{lstlisting}
+
+% ### 2.4
+\mysection{Масштабирование RL-модели для распределения ресурсов}
+
+% #### Система управления
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/freemeal.png}
+  \caption{Иллюстрация теоремы о бесплатном обеде}
+  \label{fig:free-meal}
+\end{figure}
+
+% TODO: текст раздела
+
+% #### 2.5.2
+\mysubsection{Макроэкономическое регулирование}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/rl-example.png}
+  \caption{Иллюстрацию механизма ABC+QF с примерами распределения финансирования.}
+  \label{fig:rl-example}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{lstlisting}[language=Python, caption={Пример кода RL-агента}, label={lst:rlmodel}]
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\end{lstlisting}
+
+
+% ### 2.5
+\mysection{Моделирование ?? распределения инвестиций}
+
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./assets/q-network.png}
+  \caption{Результаты работы QDN}
+  \label{fig:rl-model}
+\end{figure}
+
+% ### 2.6
+\mysection{Вывод по второй главе}
+
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% #### ИИ блогер
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{./assets/llm-social-agent.png}
+  \caption{Фрагмент контурной стратегии принятия решений ИИ-блогером: реакция среды влияет на выбор темы, длины и типа постов, что в свою очередь определяет финансовый результат}
+  \label{fig:ai-blogger-flow}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% #### Найм сотрудников
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% #### Вендинговый апарат
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+
+% TODO: текст раздела
+
+\begin{itemize}
+  \item Поддержка целостной среды — моделирование ресурсов, ограничений, последствий действий, чтобы обеспечить устойчивость экономики.
+  \item Агрегация и фильтрация сигналов — отслеживание мета-показателей (снижение спроса, перегрев рынка, рост дефицита), недоступных отдельным агентам.
+  \item Изменение правил взаимодействия — введение локинга, корректировка штрафов, ограничение действий или адаптация стратегий для стабилизации поведения агентов.
+\end{itemize}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+
+% #### Оценка проектов
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/llmcontest.png}
+  \caption{Сравнение предел централизации и придела децентрализации}
+  \label{fig:llmcontest}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% TODO: текст раздела
+
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% ###################################################
+% # Глава 3
+\mychapter{РЕАЛИЗАЦИЯ ДЕЦЕНТРАЛИЗОВАННОГО ПРИЛОЖЕНИЯ}
+% ###################################################
+
+% TODO: текст раздела
+
+% ### 3.1
+\mysection{Программные и технические средства разработки}
+
+% ### 3.1.1
+\mysubsection{Компоненты системы}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{itemize}
+  \item React: библиотека для веб-интерфейса (SPA), обеспечивающая декларативную разработку UI. React позволяет строить интерфейсы «из отдельных частей – компонентов». В нашем веб-клиенте React используется для создания динамического интерфейса, обеспечивающего отзывчивое обновление экрана при изменениях данных. \cite{docs_react_2025}
+
+  \item Telegram Bot: интерфейс обратной связи и модерации, реализованный на Python с помощью библиотеки aiogram, которая предоставляет асинхронный доступ к Bot API Telegram. Бот используется для приема команд от администраторов (модерация контента, рассылка уведомлений) и взаимодействия с пользователями (обратная связь, уведомления о статусе инициатив). \cite{aiogram_docs_2025}
+
+
+  \item PostgreSQL: реляционная база данных для хранения основной информации (пользователи, инициативы, транзакции, метаданные). PostgreSQL – мощная открытая объектно-реляционная СУБД с более чем 35-летней историей развития, известная своей надёжностью, богатым набором функций и высокой производительностью. В веб-клиенте React используется для создания динамического интерфейса. \cite{docs_postgresql_2025}
+
+
+  \item WalletConnect: протокол для подключения децентрализованных приложений к мобильным криптокошелькам, реализующий безопасную авторизацию и подписание транзакций. \cite{docs_walletconnect_2025}
+
+  \item Solidity: основной язык для написания смарт-контрактов в экосистеме Ethereum. \cite{docs_solidity_2025}
+
+  \item Telegram Bot API: официальный API для создания ботов в Telegram. \cite{docs_telegram_bot_api_2025}
+
+  \item python-telegram-bot: популярная библиотека для создания Telegram-ботов на Python. \cite{docs_python_telegram_bot_2025}
+
+  \item ethers.js: библиотека для взаимодействия с Ethereum-блокчейном на стороне клиента. \cite{docs_ethersjs_2025}
+
+  \item web3.js: альтернативная библиотека для работы с Ethereum, поддерживающая широкий спектр функций. \cite{docs_web3js_2025}
+
+  \item Yarn: менеджер пакетов для JavaScript и TypeScript проектов. \cite{docs_yarn_2025}
+
+  \item Node.js: среда выполнения JavaScript на сервере. \cite{docs_nodejs_2025}
+
+  \item TypeScript: надстройка над JavaScript, добавляющая статическую типизацию. \cite{docs_typescript_2025}
+
+  \item JavaScript: основной язык программирования для веб- и мобильных приложений. \cite{docs_javascript_2025}
+
+\end{itemize}
+
+% TODO: текст раздела
+
+% ### 3.2
+\mysection{Проектирование архитектуры и базы данных}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% #### Разработка базы данных
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/database.png}
+  \caption{Инфологическая схема базы данных}
+  \label{fig:database}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- уникальный идентификатор пользователя
+  \item \texttt{username} --- имя пользователя
+  \item \texttt{role} --- роль: author, angel, expert, community
+  \item \texttt{email} --- адрес электронной почты
+  \item \texttt{created\_at} --- дата регистрации
+\end{itemize}
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- уникальный идентификатор идеи
+  \item \texttt{author\_id} --- внешний ключ на пользователя-автора
+  \item \texttt{title} --- название идеи
+  \item \texttt{description} --- описание идеи
+  \item \texttt{industry} --- отрасль
+  \item \texttt{stage} --- стадия развития: idea, mvp, scaling
+  \item \texttt{created\_at} --- дата создания
+  \item \texttt{metadata\_hash} --- хэш метаданных (например, IPFS)
+\end{itemize}
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- идентификатор оценки
+  \item \texttt{idea\_id} --- ссылка на оцениваемую идею
+  \item \texttt{ai\_score} --- оценка ИИ
+  \item \texttt{human\_score} --- оценка от сообщества
+  \item \texttt{expert\_id} --- эксперт, проводивший оценку
+  \item \texttt{comments} --- комментарии к оценке
+  \item \texttt{evaluated\_at} --- дата оценки
+\end{itemize}
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- уникальный идентификатор транзакции
+  \item \texttt{user\_id} --- инвестор
+  \item \texttt{idea\_id} --- финансируемая идея
+  \item \texttt{amount} --- сумма вклада
+  \item \texttt{timestamp} --- время вложения
+\end{itemize}
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- уникальный идентификатор токена
+  \item \texttt{idea\_id} --- связанная идея
+  \item \texttt{supply} --- объем эмиссии
+  \item \texttt{price} --- цена токена
+  \item \texttt{reserve} --- резервный пул
+  \item \texttt{vesting\_period} --- период вестинга (в днях)
+  \item \texttt{tribute\_percent} --- трибьют в процентах
+  \item \texttt{created\_at} --- дата выпуска токена
+\end{itemize}
+
+% TODO: текст раздела
+\begin{itemize}
+  \item \texttt{id} --- уникальный идентификатор транзакции
+  \item \texttt{sender\_id} --- отправитель транзакции
+  \item \texttt{receiver\_email} --- email приглашённого
+  \item \texttt{status} --- статус: pending, accepted, rejected
+  \item \texttt{sent\_at} --- дата отправки
+\end{itemize}
+
+% TODO: базовые запросы
+
+% TODO: текст раздела
+
+% ### 3.2
+\mysection{Разработать серверную часть децентрализованного приложения}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/telegram-bot.png}
+  \caption{Сообщения валидации для администрата и пользователя}
+  \label{fig:telegram-bot}
+\end{figure}
+
+% TODO: текст раздела
+
+% ### 3.4
+\mysection{Разработка клиентской части децентрализованного приложения}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-prototype.png}
+  \caption{Схема основных процессов и взаимодействий в прототипе платформы}
+  \label{fig:app-prototype}
+\end{figure}
+
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-navigation.png}
+  \caption{Экран навигации между модулями приложения}
+  \label{fig:app-navigation}
+\end{figure}
+
+% #### Разработка дизайн системы
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.2\textwidth]{./assets/app-logo.png}
+  \caption{Логотип приложения}
+  \label{fig:app-logo}
+\end{figure}
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/components.png}
+  \caption{Прототип компонентов системы}
+  \label{fig:components}
+\end{figure}
+
+% #### Главный экран приложения
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-main-flow.png}
+  \caption{Главный экран платформы с агрегированным AUM, подборкой продуктов и инвестиционным калькулятором}
+  \label{fig:app-main-flow}
+\end{figure}
+
+% #### Экран стратегии и портфеля
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-assets.png}
+  \caption{Экран стратегии и управления инвестиционными позициями}
+  \label{fig:app-assets}
+\end{figure}
+
+% TODO: текст раздела
+
+% #### Экран регистрации пользователя
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-create.png}
+  \caption{Экран регистрации и первичного создания учётной записи}
+  \label{fig:app-create}
+\end{figure}
+
+% #### Личный кабинет пользователя
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-settings.png}
+  \caption{Личный кабинет пользователя: профиль, портфель и обратная связь}
+  \label{fig:app-settings}
+\end{figure}
+
+% #### Подключение кошелька и проведение инвестиции
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{./assets/app-browser.png}
+  \caption{Экран подключения кошелька и перехода к инвестиционной операции}
+  \label{fig:app-browser}
+\end{figure}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% #### Главная страница
+
+% TODO: текст раздела
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./assets/landing-page.png}
+  \caption{Лендинговая страница}
+  \label{fig:landing-page}
+\end{figure}
+
+% TODO: текст раздела
+% ### 3.5
+\mysection{Обеспечение безопасности и тестирование приложения}
+
+% ???????????????????7
+
+% ### 3.6
+\mysection{Вывод по третьей главе}
+% TODO: текст раздела
+
+% Про вложенность
+% TODO: текст раздела
+
+% ###################################################
+% ## Заключение
+% ###################################################
+
+\newpage
+\begin{center}
+  \textbf{ЗАКЛЮЧЕНИЕ}
+\end{center}
+\addcontentsline{toc}{chapter}{ЗАКЛЮЧЕНИЕ}
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+% TODO: текст раздела
+
+\renewcommand{\bibname}{\fontsize{14pt}{21pt}\selectfont СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+\bibliographystyle{bibformat}
+\bibliography{bibliography}
+
+\end{document}

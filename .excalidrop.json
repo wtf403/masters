@@ -1,0 +1,7 @@
+{
+  "remote": "wtf403/masters",
+  "target": "pages",
+  "viewerUrl": "https://wtf403.github.io/masters/",
+  "relayUrl": "https://excalidrop.wtf403.workers.dev",
+  "relayMode": "shared"
+}

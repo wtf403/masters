@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "excalidrop": {
+      "command": "npx",
+      "args": [
+        "--prefix",
+        "/Users/wtf403/.excalidrop-npx",
+        "-y",
+        "excalidrop@latest",
+        "mcp",
+        "--repo",
+        "wtf403/masters"
+      ],
+      "env": {
+        "EXCALIDROP_RELAY_URL": "https://excalidrop.wtf403.workers.dev"
+      }
+    }
+  }
+}
