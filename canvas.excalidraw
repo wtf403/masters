@@ -563,6 +563,36 @@
       "originalText": "https://slice-ar.com",
       "autoResize": true,
       "lineHeight": 1.25
+    },
+    {
+      "id": "haFGfLP8mk5P8lL-BOz_r",
+      "type": "embeddable",
+      "x": 794.2395825952487,
+      "y": 993.5838175803906,
+      "width": 473,
+      "height": 840,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aI",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 539111292,
+      "version": 19,
+      "versionNonce": 955554044,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1790418274493,
+      "link": "https://youtube.com/shorts/ved_VJS35ok?is=m-938angnLXvCaXG",
+      "locked": false
     }
   ],
   "files": {}
