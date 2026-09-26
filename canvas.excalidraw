@@ -593,6 +593,36 @@
       "updated": 1790418274493,
       "link": "https://youtube.com/shorts/ved_VJS35ok?is=m-938angnLXvCaXG",
       "locked": false
+    },
+    {
+      "id": "Rm8Ij-iYNNc7ju_f3ktzg",
+      "type": "embeddable",
+      "x": 290.8834157478859,
+      "y": 2103.1194525692463,
+      "width": 840,
+      "height": 473,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aJ",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 312273532,
+      "version": 32,
+      "versionNonce": 1707604604,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1790423679103,
+      "link": "https://www.youtube.com/watch?v=R2wZHTBpH6A",
+      "locked": false
     }
   ],
   "files": {}
