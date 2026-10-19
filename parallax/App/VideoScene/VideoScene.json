@@ -1,0 +1,18 @@
+{
+  "width": 96,
+  "height": 54,
+  "frameCount": 65,
+  "fps": 15,
+  "duration": 4.333333333333333,
+  "nearDepth": 0.025,
+  "farDepth": 0.14,
+  "referenceEyeDistance": 0.4,
+  "validStereoFraction": 0.8468012152777777,
+  "disparityPercentiles": [
+    0.006249601021409035,
+    5.842285275459287
+  ],
+  "method": "OpenCV StereoSGBM; filled and smoothed relative disparity",
+  "metricCalibration": false,
+  "source": "Apple Rendering stereoscopic video with RealityKit: sample.mov"
+}

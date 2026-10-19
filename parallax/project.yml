@@ -1,0 +1,62 @@
+# XcodeGen project definition.
+#
+# Regenerate the Xcode project after changing this file or adding source files:
+#
+#     xcodegen generate
+#
+# The SwiftUI app lives in Sources/ParallaxApp and is compiled directly by the app
+# target. ParallaxKit comes from the local Swift package at the repository root, so
+# there is exactly one implementation of the core library shared by SwiftPM, the
+# app, and the command line tools.
+
+name: Parallax
+
+options:
+  bundleIdPrefix: com.wtf403.parallax
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+packages:
+  parallax:
+    path: .
+
+targets:
+  Parallax:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources/ParallaxApp
+      - path: Samples
+        excludes: [README.md]
+        buildPhase: resources
+    dependencies:
+      - package: parallax
+        product: ParallaxKit
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Parallax
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        NSCameraUsageDescription: Parallax uses the front camera to track your head position so the screen can act as a window onto another space.
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.wtf403.parallax
+        PRODUCT_NAME: Parallax
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+
